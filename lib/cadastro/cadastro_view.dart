@@ -4,6 +4,7 @@ import 'package:supabase_cubitt/cadastro/cadastro_cubit.dart';
 import 'package:supabase_cubitt/cadastro/cadastro_states.dart';
 import 'package:supabase_cubitt/components/custom_outlined_button.dart';
 import 'package:supabase_cubitt/components/custom_textfield.dart';
+import 'package:supabase_cubitt/di/instace.dart';
 
 class CadastroView extends StatelessWidget {
   CadastroView({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class CadastroView extends StatelessWidget {
       TextEditingController(text: 'lucasvucc@gmail.com');
   final TextEditingController controllerSenha =
       TextEditingController(text: 'lucas123');
-  final CadastroCubit cubit = CadastroCubit();
+  final cubit = getIt<CadastroCubit>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,23 +58,31 @@ class CadastroView extends StatelessWidget {
                 controller: controllerSenha,
                 isSecret: true,
               ),
-              BlocConsumer(
-                  bloc: cubit,
-                  builder: (contex, state) {
-                    return CustomOutlinedButton(
-                        onPressed: () {
-                          cubit.cadastrarUser(controllerNome.text,
-                              controllerEmail.text, controllerSenha.text);
-                        },
-                        fixedSize: Size(size.width, 42),
-                        borderColor: const Color.fromRGBO(62, 207, 142, 100),
-                        child: bottomChild(state, contex));
-                  },
-                  listener: (contex, state) {
-                    if (state is CadastroErrorState) {
-                      showError(state.error, contex);
-                    }
-                  }),
+              BlocConsumer<CadastroCubit, CadastroState>(
+                bloc: cubit,
+                listener: (contex, state) {
+                  state.maybeWhen(
+                    orElse: () {},
+                    error: (e) {
+                      showError(e, contex);
+                    },
+                  );
+                },
+                builder: (contex, state) {
+                  return state.maybeWhen(
+                    orElse: () {
+                      return CustomOutlinedButton(
+                          onPressed: () {
+                            cubit.cadastrarUser(controllerNome.text,
+                                controllerEmail.text, controllerSenha.text);
+                          },
+                          fixedSize: Size(size.width, 42),
+                          borderColor: const Color.fromRGBO(62, 207, 142, 100),
+                          child: bottomChild(state, contex));
+                    },
+                  );
+                },
+              ),
             ],
           )),
         ),
@@ -95,14 +104,14 @@ class CadastroView extends StatelessWidget {
   }
 
   Widget bottomChild(states, context) {
-    if (states is CadastroLoadingState) {
+    if (states is LoadingCadastroState) {
       return const SizedBox(
         height: 15,
         width: 15,
         child:
             CircularProgressIndicator(color: Color.fromRGBO(62, 207, 142, 100)),
       );
-    } else if (states is CadastroSuccessState) {
+    } else if (states is SuccessCadastroState) {
       Future.delayed(const Duration(milliseconds: 1500))
           .then((value) => Navigator.pop(context));
       return const Icon(Icons.thumb_up,

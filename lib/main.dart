@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:supabase_cubitt/cadastro/cadastro_view.dart';
+import 'package:supabase_cubitt/di/instace.dart';
 import 'package:supabase_cubitt/home/home_view.dart';
 import 'package:supabase_cubitt/login/login_view.dart';
 import 'package:supabase_cubitt/static_var.dart';
@@ -11,6 +12,7 @@ Future<void> main() async {
   await Supabase.initialize(
       url: StaticVar.supabaseUrl, anonKey: StaticVar.supabaseToken);
   initialization();
+  configureDependencies();
 }
 
 initialization() async {

@@ -1,6 +1,8 @@
+import 'package:injectable/injectable.dart';
 import 'package:supabase_cubitt/static_var.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+@injectable
 class CadastroRepository {
   SupabaseClient supabase =
       SupabaseClient(StaticVar.supabaseUrl, StaticVar.supabaseToken);

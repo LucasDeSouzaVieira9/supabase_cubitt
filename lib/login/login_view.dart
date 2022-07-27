@@ -41,27 +41,30 @@ class LoginView extends StatelessWidget {
                   icon: Icons.security,
                   isSecret: true,
                 ),
-                BlocConsumer(
-                    bloc: cubit,
-                    builder: (context, state) {
-                      return OutlinedButton(
-                          onPressed: () {
-                            cubit.authLogin(
-                                controllerEmail.text, controllerSenha.text);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            fixedSize: Size(size.width, 42),
-                            side: const BorderSide(
-                                color: Color.fromRGBO(62, 207, 142, 100),
-                                width: 2),
-                          ),
-                          child: bottomShow(state, context));
-                    },
-                    listener: (contex, state) {
-                      if (state is LoginErrorState) {
-                        showError(state.error, contex);
-                      }
-                    }),
+                BlocConsumer<LoginCubit, LoginState>(
+                  bloc: cubit,
+                  listener: (contex, state) {
+                    state.maybeWhen(
+                        orElse: () {},
+                        error: (e) {
+                          showError(e, contex);
+                        });
+                  },
+                  builder: (context, state) {
+                    return OutlinedButton(
+                        onPressed: () {
+                          cubit.authLogin(
+                              controllerEmail.text, controllerSenha.text);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          fixedSize: Size(size.width, 42),
+                          side: const BorderSide(
+                              color: Color.fromRGBO(62, 207, 142, 100),
+                              width: 2),
+                        ),
+                        child: bottomShow(state, context));
+                  },
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -84,13 +87,13 @@ class LoginView extends StatelessWidget {
   }
 
   Widget bottomShow(state, context) {
-    if (state is LoginLoadingState) {
+    if (state is LoadingLoginState) {
       return const SizedBox(
           height: 15,
           width: 15,
           child: CircularProgressIndicator(
               color: Color.fromRGBO(62, 207, 142, 100)));
-    } else if (state is LoginSuccessState) {
+    } else if (state is SuccessLoginState) {
       Future.delayed(const Duration(milliseconds: 1500))
           .then((value) => Navigator.pushNamed(context, '/home'));
       return const Icon(Icons.thumb_up,

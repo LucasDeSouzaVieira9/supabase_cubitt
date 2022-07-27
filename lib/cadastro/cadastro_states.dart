@@ -1,12 +1,12 @@
-abstract class CadastroStates {}
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CadastroInitialState extends CadastroStates {}
+part 'cadastro_states.freezed.dart';
 
-class CadastroLoadingState extends CadastroStates {}
-
-class CadastroSuccessState extends CadastroStates {}
-
-class CadastroErrorState extends CadastroStates {
-  final String error;
-  CadastroErrorState({required this.error});
+@freezed
+class CadastroState with _$CadastroState {
+  const factory CadastroState.initial() = InitialCadastroState;
+  const factory CadastroState.loading() = LoadingCadastroState;
+  const factory CadastroState.success() = SuccessCadastroState;
+  const factory CadastroState.error({required String error}) =
+      ErrorCadastroState;
 }
