@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_cubitt/components/custom_textfield.dart';
 import 'package:supabase_cubitt/login/login_cubit.dart';
 import 'package:supabase_cubitt/login/login_states.dart';
+import 'package:supabase_cubitt/router/router.gr.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({Key? key}) : super(key: key);
@@ -12,6 +14,7 @@ class LoginView extends StatelessWidget {
       TextEditingController(text: 'lucas123');
   @override
   Widget build(BuildContext context) {
+    final route = AutoRouter.of(context);
     LoginCubit cubit = LoginCubit();
     final Size size = MediaQuery.of(context).size;
 
@@ -62,7 +65,7 @@ class LoginView extends StatelessWidget {
                               color: Color.fromRGBO(62, 207, 142, 100),
                               width: 2),
                         ),
-                        child: bottomShow(state, context));
+                        child: bottomShow(state, route));
                   },
                 ),
                 Row(
@@ -70,7 +73,7 @@ class LoginView extends StatelessWidget {
                   children: [
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed('/cadastro');
+                          route.push(CadastroView());
                         },
                         child: const Text(
                           'Cadastre-se',
@@ -86,7 +89,7 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  Widget bottomShow(state, context) {
+  Widget bottomShow(state, route) {
     if (state is LoadingLoginState) {
       return const SizedBox(
           height: 15,
@@ -95,7 +98,7 @@ class LoginView extends StatelessWidget {
               color: Color.fromRGBO(62, 207, 142, 100)));
     } else if (state is SuccessLoginState) {
       Future.delayed(const Duration(milliseconds: 1500))
-          .then((value) => Navigator.pushNamed(context, '/home'));
+          .then((value) => route.push(const HomeView()));
       return const Icon(Icons.thumb_up,
           size: 15, color: Color.fromRGBO(62, 207, 142, 100));
     }

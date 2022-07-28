@@ -1,0 +1,6 @@
+{
+    "dart.flutterHotReloadOnSave": "all",
+    "dart.hotReloadOnSave": "all",
+    "editor.hover.delay": 500,
+    "files.autoSaveDelay": 3000
+}

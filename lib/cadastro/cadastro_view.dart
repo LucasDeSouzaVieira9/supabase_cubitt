@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_cubitt/cadastro/cadastro_cubit.dart';
@@ -19,6 +20,7 @@ class CadastroView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final route = AutoRouter.of(context);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
@@ -32,7 +34,7 @@ class CadastroView extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        route.pop();
                       },
                       icon: const Icon(
                         Icons.arrow_back_ios_new_outlined,
@@ -78,7 +80,7 @@ class CadastroView extends StatelessWidget {
                           },
                           fixedSize: Size(size.width, 42),
                           borderColor: const Color.fromRGBO(62, 207, 142, 100),
-                          child: bottomChild(state, contex));
+                          child: bottomChild(state, route));
                     },
                   );
                 },
@@ -103,7 +105,7 @@ class CadastroView extends StatelessWidget {
     ));
   }
 
-  Widget bottomChild(states, context) {
+  Widget bottomChild(states, route) {
     if (states is LoadingCadastroState) {
       return const SizedBox(
         height: 15,
@@ -113,7 +115,7 @@ class CadastroView extends StatelessWidget {
       );
     } else if (states is SuccessCadastroState) {
       Future.delayed(const Duration(milliseconds: 1500))
-          .then((value) => Navigator.pop(context));
+          .then((value) => route.pop());
       return const Icon(Icons.thumb_up,
           size: 15, color: Color.fromRGBO(62, 207, 142, 100));
     } else {
